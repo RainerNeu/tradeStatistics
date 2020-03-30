@@ -8,3 +8,18 @@ Formula is:     return = (endValue - initialValue)/initialValue
 function getNominalReturn(arr::Array{Float64,1})::Float64
     return Base.sum(arr)
 end
+
+"""
+    getReturnRate
+calculate the return of a tradeSeries as a rate
+formula: returnRate = p(t)/p(0)-1 = (p(t) - p(0))/p(0)
+"""
+function getReturnRate(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
+    # if the initial value is 0 or less abort the programm and inform user
+    if initialValue <= 0
+        Error("Initial Value is 0 or less: See function getReturnRate");
+        exit(0);
+    end
+    endValue = getVectorSum(profitAndLossArray)+initialValue;
+    return ((endValue - initialValue) / initialValue)
+end
