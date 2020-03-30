@@ -23,3 +23,11 @@ function getReturnRate(profitAndLossArray::Array{Float64,1}, initialValue::Float
     endValue = getVectorSum(profitAndLossArray)+initialValue;
     return ((endValue - initialValue) / initialValue)
 end
+
+"""
+    getReturnRatePercentage
+calculate the return of a tradeSeries as percentage
+"""
+function getReturnRatePercentage(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
+    return getReturnRate(profitAndLossArray,initialValue)*100
+end
