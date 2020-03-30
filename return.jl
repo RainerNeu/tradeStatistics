@@ -39,3 +39,15 @@ convert the return Rate to annulized Return with periods
 function convertReturnToAnnulizedReturn(returnRate::Float64, amountOfPeriods::Float64)::Float64
     return round(((1+returnRate)^(1/amountOfPeriods))-1,digits=3)
 end
+
+"""
+    getAnnulizedReturnRateBetweenDates
+calculates the annulized Return between twoDates for yearly scale
+"""
+function getAnnulizedReturnRateBetweenDatesYearly(profitAndLossArray::Array{Float64,1}, capitalAtBeginn::Float64, beginDate::Date, endDate::Date)::Float64
+    #Local Variables used
+    averageAmountOfDaysPerYear::Float64 = 365.25                                #Average amount of days per year taking in account leap years
+    returnRate::Float64 = getReturnRate(profitAndLossArray,capitalAtBeginn)
+    amountOfDays = Dates.days(endDate-beginDate)+1                              # +1 to set the end-day to a closed-interval: 01.01.2018 to 31.12.2018 includes the 31.12.2018
+    return ((1+returnRate)^(365.25/amountOfDays))-1                             # 365.25 amount of days per year taking in account leap years
+end
