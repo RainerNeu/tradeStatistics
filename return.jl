@@ -31,3 +31,11 @@ calculate the return of a tradeSeries as percentage
 function getReturnRatePercentage(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
     return getReturnRate(profitAndLossArray,initialValue)*100
 end
+
+"""
+    convertReturnToAnnulizedReturn
+convert the return Rate to annulized Return with periods
+"""
+function convertReturnToAnnulizedReturn(returnRate::Float64, amountOfPeriods::Float64)::Float64
+    return round(((1+returnRate)^(1/amountOfPeriods))-1,digits=3)
+end
