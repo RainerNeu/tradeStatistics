@@ -23,3 +23,55 @@ function getMaxDD(arr::Array{Float64,1})::Float64
     end
     return maxDD
 end
+
+
+"""
+    getMaxDDRate_relativeToLastPeak(arr)
+calculates maximum Drawdown rate (not percentage!)
+relative to the last Peak before DD (not relative to initial Capital)
+parameter arr is the profit and loss series (not the aggregated profit and loss series)
+be aware: data must be sorted by date upfront!
+be aware: returns NaN if there is no DD
+          returns inf if there DD, but never positiv equity
+"""
+function getMaxDDRate_relativeToLastPeak(arr::Array{Float64,1}, )::Float64
+    equity = 0.0
+    peak=0.0
+    last_peak_before_maxDD=0.0
+    last_peak_before_maxDD_position = 0
+    maxDD=0.0                                                                   # initialize maxDD with Type FLOAT
+    maxDDRate=0.0
+    aggregatedSeries = getAccumulatedProfitLossSeries(arr);                     # create aggregatedSeries
+
+    for n in eachindex(aggregatedSeries)
+        equity = aggregatedSeries[n]
+        #Check if new peak is available
+        if equity>peak
+            peak = equity
+        elseif abs(peak-equity) > maxDD
+            maxDD = abs(peak - equity)
+            last_peak_before_maxDD_position = n
+        end
+    end
+
+    #if no dd don´t search for last peak!
+    if maxDD > 0
+        if maximum(aggregatedSeries[1:last_peak_before_maxDD_position]) > 0
+        last_peak_before_maxDD = maximum(aggregatedSeries[1:last_peak_before_maxDD_position])
+        else
+        last_peak_before_maxDD = 0.0
+        end
+    else
+        last_peak_before_maxDD = 0.0
+    end
+
+    println("LastPeak:", last_peak_before_maxDD)
+
+    if maxDD == 0.0 && last_peak_before_maxDD== 0.0                             #Assume there are only positiv trades
+        return Inf
+    elseif maxDD > 0 && last_peak_before_maxDD == 0.0                           #Assume there are only negativ trades
+        return -Inf
+    else
+        return maxDD/last_peak_before_maxDD
+    end
+end
