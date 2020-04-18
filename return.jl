@@ -1,8 +1,8 @@
 """
     getNominalReturn
 calculates the return of a "profit and loss"-series as absolute value
-per definition: the net profit or loss of an investment defined by 
-the change in value over a stated period including all costs and incomes
+per definition: the net profit or loss of an investment defined by the change
+in value over a stated period including all costs and incomes
 Formula is:     return = (endValue - initialValue)/initialValue
 """
 function getNominalReturn(arr::Array{Float64,1})::Float64
@@ -10,27 +10,29 @@ function getNominalReturn(arr::Array{Float64,1})::Float64
 end
 
 """
-    getReturnRate
+    getReturn_rate
 calculate the return of a tradeSeries as a rate
 formula: returnRate = p(t)/p(0)-1 = (p(t) - p(0))/p(0)
 """
-function getReturnRate(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
+function getReturn_rate(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
     # if the initial value is 0 or less abort the programm and inform user
     if initialValue <= 0
         Error("Initial Value is 0 or less: See function getReturnRate");
         exit(0);
     end
-    endValue = getVectorSum(profitAndLossArray)+initialValue;
+    endValue = getNominalReturn(profitAndLossArray)+initialValue;
     return ((endValue - initialValue) / initialValue)
 end
 
+
 """
-    getReturnRatePercentage
+    getReturn_percentage
 calculate the return of a tradeSeries as percentage
 """
-function getReturnRatePercentage(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
-    return getReturnRate(profitAndLossArray,initialValue)*100
+function getReturn_percentage(profitAndLossArray::Array{Float64,1}, initialValue::Float64)::Float64
+    return getReturn_rate(profitAndLossArray,initialValue)*100
 end
+
 
 """
     convertReturnToAnnulizedReturn
@@ -45,9 +47,8 @@ end
 calculates the annulized Return between twoDates for yearly scale
 """
 function getAnnulizedReturnRateBetweenDatesYearly(profitAndLossArray::Array{Float64,1}, capitalAtBeginn::Float64, beginDate::Date, endDate::Date)::Float64
-    #Local Variables used
     averageAmountOfDaysPerYear::Float64 = 365.25                                #Average amount of days per year taking in account leap years
     returnRate::Float64 = getReturnRate(profitAndLossArray,capitalAtBeginn)
-    amountOfDays = Dates.days(endDate-beginDate)+1                              # +1 to set the end-day to a closed-interval: 01.01.2018 to 31.12.2018 includes the 31.12.2018
+    amountOfDays = Dates.days((endDate + Dates.Day(1)) - beginDate)             # +1 to set the end-day to a closed-interval: 01.01.2018 to 31.12.2018 includes the 31.12.2018
     return ((1+returnRate)^(365.25/amountOfDays))-1                             # 365.25 amount of days per year taking in account leap years
 end
