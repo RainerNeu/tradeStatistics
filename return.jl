@@ -52,3 +52,27 @@ function getAnnulizedReturnRateBetweenDatesYearly(profitAndLossArray::Array{Floa
     amountOfDays = Dates.days((endDate + Dates.Day(1)) - beginDate)             # +1 to set the end-day to a closed-interval: 01.01.2018 to 31.12.2018 includes the 31.12.2018
     return ((1+returnRate)^(365.25/amountOfDays))-1                             # 365.25 amount of days per year taking in account leap years
 end
+
+"""
+    getYearlyAverageProfit_betweenDates
+calculates the average yearly return for a given array of profits and losses
+between two given Dates
+"""
+
+function getYearlyAverageProfit_betweenDates(profitAndLossArray::Array{Float64,1},beginDate::Date, endDate::Date)::Float64
+    nominalReturn = getNominalReturn(profitAndLossArray);
+    amountOfDaysBetween = getDaysBetweenDates_includeLast(beginDate, endDate);
+    amountOfYearsBetween = getDaysBetweenDates_includeLast(beginDate,endDate)/365.25
+    return nominalReturn / amountOfYearsBetween
+end
+
+"""
+    getYearlyAverageProfit_percentage
+calculates the average yearly return for a given array of profits and losses
+and returns the percentage values
+"""
+
+function getYearlyAverageProfit_percentage(profitAndLossArray::Array{Float64,1},beginDate::Date, endDate::Date, initialCapital::Float64)::Float64
+    yearlyAverageProfit::Float64 = getYearlyAverageProfit(profitAndLossArray, beginDate,endDate)
+    return (yearlyAverageProfit/initialCapital)*100
+end
