@@ -24,15 +24,14 @@ function getMaxDD(arr::Array{Float64,1})::Float64
     return maxDD
 end
 
-
 """
     getMaxDDRate_relativeToLastPeak(arr)
 calculates maximum Drawdown rate (not percentage!)
 relative to the last Peak before DD (not relative to initial Capital)
 parameter arr is the profit and loss series (not the aggregated profit and loss series)
 be aware: data must be sorted by date upfront!
-be aware: returns NaN if there is no DD
-          returns inf if there DD, but never positiv equity
+be aware: returns inf if there is no DD *only positiv trades*
+          returns -inf if there are no positive trades
 """
 function getMaxDDRate_relativeToLastPeak(arr::Array{Float64,1}, )::Float64
     equity = 0.0
@@ -57,9 +56,9 @@ function getMaxDDRate_relativeToLastPeak(arr::Array{Float64,1}, )::Float64
     #if no dd don´t search for last peak!
     if maxDD > 0
         if maximum(aggregatedSeries[1:last_peak_before_maxDD_position]) > 0
-        last_peak_before_maxDD = maximum(aggregatedSeries[1:last_peak_before_maxDD_position])
+            last_peak_before_maxDD = maximum(aggregatedSeries[1:last_peak_before_maxDD_position])
         else
-        last_peak_before_maxDD = 0.0
+            last_peak_before_maxDD = 0.0
         end
     else
         last_peak_before_maxDD = 0.0
