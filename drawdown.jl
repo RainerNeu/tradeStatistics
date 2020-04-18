@@ -76,13 +76,22 @@ function getMaxDDRate_relativeToLastPeak(arr::Array{Float64,1}, )::Float64
 end
 
 """
-    getMaxDD_Rate
+    getMaxDD_rate
 sets the maximum Drawdown in relation to invested capital
-returns 0.01 for 1%
 """
 function getMaxDD_Rate(profitLossSeriesArray::Array{Float64,1}, initialCapital::Float64):: Float64
     maxDD = getMaxDD(profitLossSeriesArray)
     return (maxDD/initialCapital)
 end
 
+
+
+"""
+    getMaxDD_percentage
+sets the maximum Drawdown in relation to invested capital
+"""
+function getMaxDDPercentage(profitLossSeriesArray::Array{Float64,1}, initialCapital::Float64):: Float64
+    maxDD = getMaxDD(profitLossSeriesArray)
+    return (maxDD/initialCapital)*100
+end
 
