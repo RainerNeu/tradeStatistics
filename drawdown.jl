@@ -4,11 +4,11 @@ calculates the maximum Drawdown of profit and loss series
 (not the aggregated profit and loss series)
 be aware: data must be sorted by date upfront!
 """
-function getMaxDD(arr::Array{Float64,1})::Float64
+function getMaxDD(profitLossArray::Array{Float64,1})::Float64
     peak=0.0
-    maxDD=0.0                                                                   # initialize maxDD with Type FLOAT
+    maxDD=0.0                                                                   
     equity = 0.0
-    aggregatedSeries = getAccumulatedProfitLossSeries(arr);                     # create aggregatedSeries
+    aggregatedSeries = accumulatedProfitAndLossSeries=accumulate(+, profitLossArray);
 
     for n in eachindex(aggregatedSeries)
         equity = aggregatedSeries[n]
