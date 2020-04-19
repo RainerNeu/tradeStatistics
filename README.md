@@ -1,2 +1,4 @@
 # tradeStatistics
-functions to analyse trades, tradeSeries.
+a simple collection of functions to generate performance metrics.
+
+
